@@ -126,13 +126,18 @@ const cwd = process.cwd()
 //   (f) => (f.variants && f.variants.map((v) => v.name)) || [f.name]
 // ).reduce((a, b) => a.concat(b), [])
 
+const templates = [{
+    name: 'standard',
+    description: 'Standard Csound Project'
+}]
+
 const renameFiles = {
   _gitignore: '.gitignore'
 }
 
 async function init() {
   let targetDir = argv._[0]
-  let template = argv.template || argv.t
+//   let template = argv.template || argv.t
 
   const defaultProjectName = !targetDir ? 'csound-project' : targetDir
 
@@ -180,25 +185,21 @@ async function init() {
             type: 'text',
             name: 'author',
             message: "Author name:"
-        }
-    //     {
-    //       type: template && TEMPLATES.includes(template) ? null : 'select',
-    //       name: 'framework',
-    //       message:
-    //         typeof template === 'string' && !TEMPLATES.includes(template)
-    //           ? reset(
-    //               `"${template}" isn't a valid template. Please choose from below: `
-    //             )
-    //           : reset('Select a framework:'),
-    //       initial: 0,
-    //       choices: FRAMEWORKS.map((framework) => {
-    //         const frameworkColor = framework.color
-    //         return {
-    //           title: frameworkColor(framework.name),
-    //           value: framework
-    //         }
-    //       })
-    //     },
+        },
+        {
+          type: 'select',
+          name: 'template',
+          message: reset('Select a template:'),
+          initial: 0,
+          choices: templates.map((template) => {
+            // const frameworkColor = framework.color
+            return {
+            //   title: frameworkColor(framework.name),
+              title: `${template.name} - ${template.description}`,
+              value: template 
+            }
+          })
+        },
     //     {
     //       type: (framework) =>
     //         framework && framework.variants ? 'select' : null,
@@ -227,7 +228,7 @@ async function init() {
   }
 
   // user choice associated with prompts
-  const { overwrite, packageName, author, variant } = result
+  const { overwrite, packageName, author, template } = result
 
   const root = path.join(cwd, targetDir)
 
@@ -239,11 +240,10 @@ async function init() {
 
   // determine template
 //   template = variant || framework || template
-  template = "standard";
 
   console.log(`\nCreating project in ${root}...`)
 
-  const templateDir = path.join(__dirname, `template-${template}`)
+  const templateDir = path.join(__dirname, `template-${template.name}`)
 
   const write = (file, content) => {
     const targetPath = renameFiles[file]
