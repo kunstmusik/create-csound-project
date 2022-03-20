@@ -1,0 +1,15 @@
+{
+  "name": "csound_npm_example",
+  "version": "1.0.0",
+  "description": "Test project for managing Csound projects with NPM",
+  "main": "index.js",
+  "author": "Steven Yi <stevenyi@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "csound --env:SSDIR+=./node_modules --env:INCDIR+=./node_modules realtime.csd",
+    "render": "csound --env:SSDIR+=./node_modules --env:INCDIR+=./node_modules disk.csd"
+  },
+  "dependencies": {
+    "@kunstmusik/libsyi": "^1.0.0"
+  }
+}
